@@ -1,0 +1,15 @@
+# Build output
+build/
+.tmp/
+
+# IDE / user files
+*.user
+*.suo
+.vs/
+obj/
+bin/
+
+# OS junk
+Thumbs.db
+desktop.ini
+.DS_Store

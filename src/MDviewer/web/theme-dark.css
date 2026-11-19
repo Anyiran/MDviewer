@@ -1,0 +1,102 @@
+/* ============================================================
+   MDviewer — GitHub dark theme overrides
+   Applied via  html[data-theme="dark"]
+   ============================================================ */
+
+html[data-theme="dark"] {
+  --fg-default: #e6edf3;
+  --fg-muted: #9198a1;
+  --fg-subtle: #6e7681;
+  --canvas-default: #0d1117;
+  --canvas-subtle: #151b23;
+  --canvas-inset: #010409;
+  --canvas-overlay: #151b23;
+  --border-default: #3d444d;
+  --border-muted: #30363d;
+  --border-subtle: rgba(240, 246, 252, 0.06);
+
+  --accent-fg: #4493f8;
+  --accent-emphasis: #1f6feb;
+  --accent-muted: rgba(56, 139, 253, 0.4);
+  --accent-subtle: rgba(56, 139, 253, 0.15);
+
+  --success-fg: #3fb950;
+  --success-subtle: rgba(46, 160, 67, 0.15);
+  --attention-fg: #d29922;
+  --attention-subtle: rgba(187, 128, 9, 0.15);
+  --danger-fg: #f85149;
+  --danger-subtle: rgba(248, 81, 73, 0.1);
+  --done-fg: #ab7df8;
+  --done-subtle: rgba(163, 113, 247, 0.15);
+
+  --shadow-small: 0 0 transparent;
+  --shadow-medium: 0 3px 6px #010409;
+  --shadow-large: 0 8px 24px #010409;
+
+  --code-inline-bg: rgba(110, 118, 129, 0.4);
+  --code-block-bg: #151b23;
+
+  --hl-comment: #8b949e;
+  --hl-string: #a5d6ff;
+  --hl-keyword: #ff7b72;
+  --hl-number: #79c0ff;
+  --hl-func: #d2a8ff;
+  --hl-type: #ffa657;
+  --hl-var: #ffa657;
+  --hl-punct: #e6edf3;
+  --hl-key: #79c0ff;
+  --hl-selection: rgba(56, 139, 253, 0.4);
+
+  --ui-bg: #010409;
+  --ui-fg: #e6edf3;
+  --ui-border: #30363d;
+  --ui-hover: rgba(177, 186, 196, 0.12);
+  --ui-active: rgba(177, 186, 196, 0.2);
+  --ui-fg-muted: #9198a1;
+
+  color-scheme: dark;
+}
+
+html[data-theme="dark"] body {
+  background-color: var(--canvas-default);
+}
+
+html[data-theme="dark"] .markdown-body img {
+  /* Avoid bright white boxes behind transparent PNGs in dark mode. */
+  background-color: transparent;
+  opacity: 0.92;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: var(--canvas-default);
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background-color: #3d444d;
+  border: 3px solid var(--canvas-default);
+  border-radius: 6px;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background-color: #4d5560;
+}
+
+html:not([data-theme="dark"]) ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+html:not([data-theme="dark"]) ::-webkit-scrollbar-thumb {
+  background-color: #d1d9e0;
+  border: 3px solid var(--canvas-default);
+  border-radius: 6px;
+}
+
+html:not([data-theme="dark"]) ::-webkit-scrollbar-thumb:hover {
+  background-color: #b7bfc7;
+}
