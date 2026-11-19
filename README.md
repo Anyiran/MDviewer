@@ -4,6 +4,8 @@
 
 一个轻量、离线、顺手的 **Markdown 阅读器**。界面参考 GitHub 的 Markdown 排版，启动快、无广告、不联网，双击 `.md` 文件即可舒适阅读。
 
+> **下载**：[前往 Releases 获取安装包或便携版](https://github.com/Anyiran/MDviewer/releases/latest)
+
 ![日间模式](docs/screenshots/light.png)
 
 ![夜间模式](docs/screenshots/dark.png)
