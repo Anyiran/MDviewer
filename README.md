@@ -1,6 +1,6 @@
 # MDviewer
 
-当前版本：**1.01**
+当前版本：**1.02**
 
 一个轻量、离线、顺手的 **Markdown 阅读器**。界面参考 GitHub 的 Markdown 排版，启动快、无广告、不联网，双击 `.md` 文件即可舒适阅读。
 
@@ -117,7 +117,7 @@ build.cmd
 powershell -ExecutionPolicy Bypass -File installer\build-installer.ps1
 ```
 
-生成 `build\MDviewer-Setup-1.01.exe`。
+生成 `build\MDviewer-Setup-1.02.exe`。
 
 > 构建脚本会复用 `vendor\webview2` 中的 WebView2 SDK 程序集与加载器，因此完全离线可构建。
 
@@ -165,6 +165,15 @@ MDviewer/
 - YouTube 等需要联网的嵌入内容不会加载（离线优先，CSP 默认禁止外部脚本与 iframe）。
 - Windows 8 及以上无法由程序静默设置默认应用，这是系统限制；需要用户在「默认应用」中确认一次。
 - 语法高亮为轻量实现，覆盖常见语言（C/C++/C#/Java/JS/TS/Python/Go/Rust/PHP/SQL/HTML/CSS/JSON/YAML/Shell 等），并非完整的 IDE 级高亮。
+
+---
+
+## 更新日志
+
+### 1.02
+
+- 修复：WebView2 获得焦点后，鼠标悬停侧边栏使用滚轮仍会滚动正文、目录无法滚动的问题。
+- 新增：「关于」窗口展示作者信息与 GitHub 项目地址，可直接点击访问。
 
 ---
 

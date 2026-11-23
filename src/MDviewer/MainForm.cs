@@ -76,6 +76,7 @@ namespace MDviewer
         private int _dragStartX;
         private int _dragStartWidth;
         private bool _uiReady;
+        private MouseWheelRouter _wheelRouter;
 
         // ---------------------------------------------------------- lifecycle
 
@@ -101,6 +102,9 @@ namespace MDviewer
             BuildUi();
             ApplyTheme();
             RestoreWindowBounds();
+
+            // Keep wheel scrolling inside the sidebar even when WebView2 owns focus.
+            _wheelRouter = new MouseWheelRouter(this, _sidebar, _outline);
 
             Shown += delegate
             {
@@ -1387,6 +1391,12 @@ namespace MDviewer
                 _settings.Save();
             }
             catch { }
+
+            if (_wheelRouter != null)
+            {
+                _wheelRouter.Dispose();
+                _wheelRouter = null;
+            }
         }
 
         // ------------------------------------------------------------- bridge

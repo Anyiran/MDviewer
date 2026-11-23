@@ -12,17 +12,21 @@ namespace MDviewer
     /// <summary>Simple, themed "About" dialog describing the app and its features.</summary>
     public sealed class AboutForm : Form
     {
-        private const int LW = 484;
-        private const int LH = 472;
+        private const int LW = 560;
+        private const int LH = 596;
+        private const string RepoUrl = "https://github.com/Anyiran/MDviewer";
+        private const string WebView2Url = "https://developer.microsoft.com/microsoft-edge/webview2/";
 
         private readonly string _version;
         private readonly float _scale;
         private Rectangle _closeRect;
         private Rectangle _linkRect;
+        private Rectangle _repoRect;
         private Rectangle _okRect;
         private Rectangle _defaultRect;
         private bool _closeHover;
         private bool _linkHover;
+        private bool _repoHover;
         private bool _okHover;
         private bool _defaultHover;
 
@@ -42,6 +46,12 @@ namespace MDviewer
 
             using (Graphics g = CreateGraphics())
                 _scale = Math.Max(1f, g.DpiX / 96f);
+
+            // Never let the dialog overflow small screens (e.g. 1366x768 at 125%).
+            Rectangle work = Screen.PrimaryScreen.WorkingArea;
+            float fit = Math.Min((work.Width - 24f) / LW, (work.Height - 24f) / LH);
+            if (fit > 0 && fit < _scale)
+                _scale = Math.Max(0.6f, fit);
 
             FormBorderStyle = FormBorderStyle.None;
             StartPosition = FormStartPosition.CenterParent;
@@ -120,7 +130,7 @@ namespace MDviewer
             using (var font = new Font("Segoe UI", 10f))
             using (var brush = new SolidBrush(t.Text))
                 g.DrawString("一个轻量、顺手的 Markdown 阅读器，完全离线运行。", font, brush, pad, y);
-            y += 32;
+            y += 34;
 
             // Feature rows
             string[][] features = new string[][]
@@ -142,26 +152,34 @@ namespace MDviewer
                 using (var brush = new SolidBrush(t.Text))
                     g.DrawString(f[0], font, brush, pad + 16, y);
 
-                using (var font = new Font("Segoe UI", 8.75f))
+                using (var font = new Font("Segoe UI", 8.5f))
                 using (var brush = new SolidBrush(t.TextMuted))
                 {
-                    RectangleF r = new RectangleF(pad + 16, y + 17, LW - pad * 2 - 16, 34);
+                    RectangleF r = new RectangleF(pad + 16, y + 18, LW - pad * 2 - 16, 24);
                     g.DrawString(f[1], font, brush, r);
                 }
-                y += 42;
+                y += 48;
             }
 
             // Divider
             using (var pen = new Pen(t.Border))
-                g.DrawLine(pen, pad, y + 2, LW - pad, y + 2);
-            y += 12;
+                g.DrawLine(pen, pad, y + 4, LW - pad, y + 4);
+            y += 20;
 
             using (var font = new Font("Segoe UI", 8.5f))
             using (var brush = new SolidBrush(t.TextMuted))
             {
-                g.DrawString("渲染内核：Microsoft Edge WebView2    界面：.NET Framework WinForms", font, brush, pad, y);
+                g.DrawString("作者：Anyiran    界面：.NET Framework WinForms", font, brush, pad, y);
                 y += 20;
+                g.DrawString("渲染内核：Microsoft Edge WebView2", font, brush, pad, y);
+                y += 28;
             }
+
+            _repoRect = new Rectangle(pad, y, 320, 20);
+            using (var font = new Font("Segoe UI", 8.75f, FontStyle.Underline))
+            using (var brush = new SolidBrush(_repoHover ? t.AccentHover : t.Accent))
+                g.DrawString("GitHub：github.com/Anyiran/MDviewer  ›", font, brush, _repoRect.X, _repoRect.Y);
+            y += 24;
 
             _linkRect = new Rectangle(pad, y, 240, 20);
             using (var font = new Font("Segoe UI", 8.75f, FontStyle.Underline))
@@ -169,7 +187,7 @@ namespace MDviewer
                 g.DrawString("获取 WebView2 运行时  ›", font, brush, _linkRect.X, _linkRect.Y);
 
             // Default-app button (bottom, outline style)
-            Rectangle def = new Rectangle(LW - pad - 88 - 10 - 168, LH - 48, 168, 30);
+            Rectangle def = new Rectangle(LW - pad - 88 - 10 - 192, LH - 48, 192, 30);
             if (_defaultHover)
                 Ui.Fill(this, g, Theme.Blend(t.WindowBg, t.Accent, 0.10), def, 6);
             Ui.Stroke(this, g, t.BorderStrong, def, 6, 1f);
@@ -204,15 +222,17 @@ namespace MDviewer
             Point p = ToLogical(e.Location);
             bool ch = _closeRect.Contains(p);
             bool lh = _linkRect.Contains(p);
+            bool rh = _repoRect.Contains(p);
             bool oh = _okRect.Contains(p);
             bool dh = _defaultRect.Contains(p);
-            if (ch != _closeHover || lh != _linkHover || oh != _okHover || dh != _defaultHover)
+            if (ch != _closeHover || lh != _linkHover || rh != _repoHover || oh != _okHover || dh != _defaultHover)
             {
                 _closeHover = ch;
                 _linkHover = lh;
+                _repoHover = rh;
                 _okHover = oh;
                 _defaultHover = dh;
-                Cursor = (ch || lh || oh || dh) ? Cursors.Hand : Cursors.Default;
+                Cursor = (ch || lh || rh || oh || dh) ? Cursors.Hand : Cursors.Default;
                 Invalidate();
             }
         }
@@ -220,7 +240,7 @@ namespace MDviewer
         protected override void OnMouseLeave(EventArgs e)
         {
             base.OnMouseLeave(e);
-            _closeHover = _linkHover = _okHover = _defaultHover = false;
+            _closeHover = _linkHover = _repoHover = _okHover = _defaultHover = false;
             Cursor = Cursors.Default;
             Invalidate();
         }
@@ -234,7 +254,8 @@ namespace MDviewer
             if (_closeRect.Contains(p)) { Close(); return; }
             if (_okRect.Contains(p)) { Close(); return; }
             if (_defaultRect.Contains(p)) { SetDefaultApp(); return; }
-            if (_linkRect.Contains(p)) { OpenWebView2Page(); return; }
+            if (_repoRect.Contains(p)) { OpenUrl(RepoUrl); return; }
+            if (_linkRect.Contains(p)) { OpenUrl(WebView2Url); return; }
 
             // Drag the dialog by its background.
             Native.ReleaseCapture();
@@ -257,13 +278,13 @@ namespace MDviewer
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private static void OpenWebView2Page()
+        private static void OpenUrl(string url)
         {
             try
             {
                 Process.Start(new ProcessStartInfo
                 {
-                    FileName = "https://developer.microsoft.com/microsoft-edge/webview2/",
+                    FileName = url,
                     UseShellExecute = true
                 });
             }

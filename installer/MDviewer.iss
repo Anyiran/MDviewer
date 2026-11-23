@@ -4,7 +4,7 @@
 ; ============================================================
 
 #define AppName        "MDviewer"
-#define AppVersion     "1.01"
+#define AppVersion     "1.02"
 #define AppPublisher   "MDviewer"
 #define AppExeName     "MDviewer.exe"
 
